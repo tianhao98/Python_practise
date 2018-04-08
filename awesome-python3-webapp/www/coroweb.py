@@ -26,4 +26,6 @@ def post(path):
         return wrapper
     return decorator
 
+import merge
+
 
