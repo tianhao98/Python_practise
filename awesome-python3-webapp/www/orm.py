@@ -10,7 +10,6 @@ import aiomysql
 def log(sql, args=()):
     logging.info('SQL: %s' % sql)
 
-#创建数据库连接池
 async def create_pool(loop, **kw):
     logging.info('create database connection pool...')
     global __pool
@@ -26,6 +25,12 @@ async def create_pool(loop, **kw):
         minsize=kw.get('minsize', 1),
         loop=loop
     )
+
+async def destory_pool():
+    global __pool
+    if __pool is not None :
+        __pool.close()
+        await __pool.wait_closed()
 
 async def select(sql, args, size=None):
     log(sql, args)
@@ -228,3 +233,36 @@ class Model(dict, metaclass=ModelMetaclass):
         rows = await execute(self.__delete__, args)
         if rows != 1:
             logging.warn('failed to remove by primary key: affected rows: %s' % rows)
+
+
+
+
+#-----------以下测试使用--------------
+# import sys
+# class User(Model):
+#     __table__ = 'users'  # 设定操作数据库表
+#     id = IntegerField(primary_key=True)
+#     name = StringField(ddl='varchar(50)')
+#
+# async def main(loop):
+#     await create_pool(loop, **database)
+#     u = User(id=1, name='cuith')
+#     # user = User()
+#     # user.id = 6
+#     # user.name = 'ZhouXiaorui_miao'
+#     await u.save()
+#     await destory_pool()
+#     return u.name
+#
+# loop = asyncio.get_event_loop()
+# database = {
+#     'host':'192.168.65.30', #数据库的地址
+#     'user':'root',
+#     'password':'123456',
+#     'db':'python_test'
+# }
+#
+# loop = asyncio.get_event_loop()
+# res = loop.run_until_complete(main(loop))
+# loop.close()
+# print(res)

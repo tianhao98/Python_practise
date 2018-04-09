@@ -1,10 +1,19 @@
-import time, uuid
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
-from orm import  Model, StringField, BooleanField, FloatField, TextField
+'''
+Models for user, blog, comment.
+'''
+
+__author__ = 'Michael Liao'
+
+import time, uuid
+import asyncio
+
+from orm import Model, StringField, BooleanField, FloatField, TextField, create_pool
 
 def next_id():
     return '%015d%s000' % (int(time.time() * 1000), uuid.uuid4().hex)
-
 
 class User(Model):
     __table__ = 'users'
@@ -40,4 +49,18 @@ class Comment(Model):
     content = TextField()
     created_at = FloatField(default=time.time)
 
-print(123)
+#
+# async def test(loop):
+#     await create_pool(loop, user='www-data', password='www-data', db='awesome')
+#     u = User()
+#     u.name = 'Test'
+#     u.email = 'test@example.com'
+#     u.image = 'about:blank'
+#     u.passwd = '1234567890'
+#     await u.save()
+#
+#
+# loop = asyncio.get_event_loop()
+# task = test(loop)
+# res = loop.run_until_complete(task)
+#     print(res)
