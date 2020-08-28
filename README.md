@@ -1,2 +1,2 @@
 # Python_practise
-练习记录
+1练习记录
